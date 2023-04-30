@@ -1,5 +1,6 @@
 package com.epam.mjc;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -26,35 +27,35 @@ public class MethodParser {
      */
     public MethodSignature parseFunction(String signatureString) {
         String accessModifier=null;
-        String methodName = " ";
+        String returnType = null;
+        String methodName = null;
         List<String> strList = new ArrayList<>();
         List<MethodSignature.Argument> arguments = new ArrayList<>();
         StringTokenizer st1 = new StringTokenizer(signatureString, "(),");
         while (st1.hasMoreTokens())strList.add(st1.nextToken());
         if(strList.get(0).contains(" ")){
             String[] arr =strList.get(0).split(" ");
-            accessModifier = arr[0];
-            methodName = arr[1];
+            if(arr.length==3){
+                accessModifier=arr[0];
+                returnType=arr[1];
+            }
+            if(arr.length==2){
+                returnType=arr[0];
+            }
+            methodName = arr[arr.length-1];
         }else methodName = strList.get(0);
 
         for(int i = 1;i<strList.size();i++){
             if(i>1)strList.set(i,strList.get(i).trim());
             String[] strArray = strList.get(i).split(" ");
-        MethodSignature.Argument arg =new MethodSignature.Argument(strArray[0],strArray[1]);
+            MethodSignature.Argument arg =new MethodSignature.Argument(strArray[0],strArray[1]);
         arguments.add(arg);
         }
         MethodSignature ms = new MethodSignature(methodName,arguments);
         ms.setAccessModifier(accessModifier);
+        ms.setReturnType(returnType);
         return ms;
     }
 
-    public static void main(String[] args) {
-        MethodParser mp = new MethodParser();
-        MethodSignature mn = mp.parseFunction("Vector3 distort(int x, int y, int z, float magnitude)");
-        System.out.println(mn.getMethodName());
-        List<MethodSignature.Argument> arguments = mn.getArguments();
-        System.out.println(mn.getAccessModifier());
-        for(int i =0;i<arguments.size();i++){
-            System.out.println(arguments.get(i).getType()+" "+arguments.get(i).getName());}
-    }
+
 }
