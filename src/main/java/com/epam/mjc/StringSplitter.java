@@ -17,12 +17,16 @@ public class StringSplitter {
     public List<String> splitByDelimiters(String source, Collection<String> delimiters) {
         List<String> answer = new ArrayList<>();
         String delim="";
-        String[] Delimiters = (String[]) delimiters.toArray();
-        for(int i=0;i<Delimiters.length;i++){
-            delim = delim + Delimiters[i];
+        Object[] del = delimiters.toArray();
+        for(int i=0;i<del.length;i++){
+            delim = delim + del[i].toString();
         }
         StringTokenizer st1 = new StringTokenizer(source, delim);
         while (st1.hasMoreTokens())answer.add(st1.nextToken());
         return answer;
+    }
+
+    public static void main(String[] args) {
+
     }
 }
