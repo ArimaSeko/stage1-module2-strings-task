@@ -1,5 +1,10 @@
 package com.epam.mjc;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+import  com.epam.mjc.MethodSignature;
+
 public class MethodParser {
 
     /**
@@ -20,6 +25,36 @@ public class MethodParser {
      * @return {@link MethodSignature} object filled with parsed values from source string
      */
     public MethodSignature parseFunction(String signatureString) {
-        throw new UnsupportedOperationException("You should implement this method.");
+        String accessModifier=null;
+        String methodName = " ";
+        List<String> strList = new ArrayList<>();
+        List<MethodSignature.Argument> arguments = new ArrayList<>();
+        StringTokenizer st1 = new StringTokenizer(signatureString, "(),");
+        while (st1.hasMoreTokens())strList.add(st1.nextToken());
+        if(strList.get(0).contains(" ")){
+            String[] arr =strList.get(0).split(" ");
+            accessModifier = arr[0];
+            methodName = arr[1];
+        }else methodName = strList.get(0);
+
+        for(int i = 1;i<strList.size();i++){
+            if(i>1)strList.set(i,strList.get(i).trim());
+            String[] strArray = strList.get(i).split(" ");
+        MethodSignature.Argument arg =new MethodSignature.Argument(strArray[0],strArray[1]);
+        arguments.add(arg);
+        }
+        MethodSignature ms = new MethodSignature(methodName,arguments);
+        ms.setAccessModifier(accessModifier);
+        return ms;
+    }
+
+    public static void main(String[] args) {
+        MethodParser mp = new MethodParser();
+        MethodSignature mn = mp.parseFunction("Vector3 distort(int x, int y, int z, float magnitude)");
+        System.out.println(mn.getMethodName());
+        List<MethodSignature.Argument> arguments = mn.getArguments();
+        System.out.println(mn.getAccessModifier());
+        for(int i =0;i<arguments.size();i++){
+            System.out.println(arguments.get(i).getType()+" "+arguments.get(i).getName());}
     }
 }
